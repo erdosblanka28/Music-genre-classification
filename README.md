@@ -33,4 +33,45 @@ np.savez_compressed("music_features.npz", features=x,labels=y)
 
 ### 2. Support Vector Machine
 
-### 3. Maybe: Random Forest or CNN
+A Support Vector Machine model was implemented as a second supervised classification method. Since SVM is sensitive to the scale of the input features, the MFCC feature vectors were standardized using `StandardScaler` before training. An RBF kernel was used because the music genres are not expected to be linearly separable in the MFCC feature space.
+
+The SVM model was tested using 13, 20, 40, and 60 MFCC coefficients. The best result was achieved using 40 MFCC features, with an accuracy of 67.00%.
+
+| Number of MFCC features | SVM accuracy |
+|---|---|
+| 13 | 64.00% |
+| 20 | 65.00% |
+| 40 | 67.00% |
+| 60 | 65.50% |
+
+![SVM accuracy by MFCC features](svm_accuracy_by_features.png)
+
+The confusion matrix shows that the model performs especially well on genres such as classical, blues, metal, jazz, and pop. The most difficult genres were disco, rock, country, and reggae, which were often confused with similar genres. This is expected because these genres can have overlapping timbre and rhythm characteristics when represented only by averaged MFCC features.
+
+![SVM confusion matrix](svm_confusion_matrix_40.png)
+
+### 3. Random Forest
+
+A Random Forest classifier was implemented as a third supervised machine learning model. Random Forest uses multiple decision trees and combines their predictions to improve classification performance. Unlike SVM, it does not require feature scaling because decision trees split the data based on feature thresholds.
+
+The model was tested using 13, 20, 40, and 60 MFCC coefficients. The best result was achieved using 40 MFCC features, with an accuracy of 66.00%.
+
+| Number of MFCC features | Random Forest accuracy |
+|---|---|
+| 13 | 63.00% |
+| 20 | 64.50% |
+| 40 | 66.00% |
+| 60 | 63.50% |
+
+![Random Forest accuracy by MFCC features](random_forest_accuracy_by_features.png)
+
+The confusion matrix shows that Random Forest performed well on classical, metal, pop, jazz, and hiphop. The most difficult genres were disco, country, and rock, which were often confused with other genres (similar to). This is expected because these genres can have similar timbre and rhythm characteristics when represented only by averaged MFCC features.
+
+![Random Forest confusion matrix](random_forest_confusion_matrix_40.png)
+
+The feature importance plot shows that the lower MFCC coefficients contributed the most to the classification. This is reasonable because the first MFCC coefficients contain the strongest information about the general spectral shape and timbre of the audio signal.
+
+![Random Forest feature importance](random_forest_feature_importance_40.png)
+
+### 4. MLP
+## Final Model Comparison
