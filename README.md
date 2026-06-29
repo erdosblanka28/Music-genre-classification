@@ -2,7 +2,7 @@
 <br>
 
 ## Project Description
-This project aims to develop a machine learning model capable of classifying audio tracks into distinct musical genres using the GTZAN dataset. We will use Digital Signal Processing to extract MFCC features from audio files and implement a K-Nearest Neighbors (KNN) algorithm to classify songs into 10 different categories. The goal is to evaluate the model's accuracy in identifying musical patterns across genres like Rock, Jazz, Classical, etc.
+This project aims to develop a machine learning model capable of classifying audio tracks into distinct musical genres using the GTZAN dataset. We will use Digital Signal Processing to extract MFCC features from audio files and implement and compare several machine learning algorithms inclusing K-Nearest Neighbors (KNN), Support Vector Machine, Random Forrest and MLP Neural Network to classify songs into 10 different categories. The goal is to evaluate the model's accuracy in identifying musical patterns across genres like Rock, Jazz, Classical, etc.
 <br>
 <br>
 ## Feature extraction
@@ -101,50 +101,42 @@ The training loss curve shows that the neural network successfully learned from 
 
 ## Final Model Comparison
 
+After implementing all models, we compared the performance of KNN, SVM, Random Forest, and an MLP Neural Network. All models were trained and tested using the same 80/20 train-test split, with stratification to preserve the genre distribution in both the training and test sets.
 
-After implementing all models, we compared the performance of Tuned KNN, SVM, Random Forest, and an MLP Neural Network. All models were trained and tested using the same 80/20 train-test split, with stratification to preserve the genre distribution in both the training and test sets.
-
-The models were tested using 13, 20, 40, and 60 MFCC coefficients. This allowed us to compare both the effect of the model type and the effect of the number of MFCC features.
-
-For the final comparison, KNN was tested in a tuned form. The original KNN model used a fixed value of `k = 27`, which was chosen as an approximate theoretical value based on the size of the training set. However, to make the comparison fairer, a tuned KNN model was considered. The MFCC features were standardized using `StandardScaler`, and the most important KNN hyperparameters were optimized using `GridSearchCV`. The tested parameters were the number of neighbours, the distance metric, and the weighting method.
-The best tuned KNN accuracy was 59.00%. This improved the original fixed-parameter KNN result.
-
-![Tuned KNN accuracy by MFCC features](knn_tuned_accuracy_by_features.png)
-
-The selected `k` value also changed depending on the number of MFCC features.
-
-![Best k value for tuned KNN](knn_tuned_best_k_by_features.png)
-
-
-| Number of MFCC features |              KNN  |             Tuned KNN |    SVM | Random Forest | Neural Network |
-| ----------------------- | ------------------|---------------------: | -----: | ------------: | -------------: |
-| 13                      |            45.50% |                57.50% | 64.00% |        63.00% |         63.00% |
-| 20                      |            47.50% |                59.00% | 65.00% |        64.50% |         60.50% |
-| 40                      |            50.00% |                57.50% | 67.00% |        66.00% |         64.00% |
-| 60                      |            51.00% |                57.00% | 65.50% |        63.50% |         58.50% |
+The models were tested using 13, 20, 40, and 60 MFCC coefficients. This allowed us to compare both the effect of the model type and the effect of the number of MFCC features.KNN used the fixed k = 27 baseline.
 
 
 
-![Model accuracy comparison](comparison_final_all_models_by_features.png)
+| Number of MFCC features |              KNN  |    SVM | Random Forest | Neural Network |
+| ----------------------- | ------------------| -----: | ------------: | -------------: |
+| 13                      |            55.50% | 64.00% |        63.00% |         63.00% |
+| 20                      |            46.00% | 65.00% |        64.50% |         60.50% |
+| 40                      |            57.00% | 67.00% |        66.00% |         64.00% |
+| 60                      |            58.00% | 65.50% |        63.50% |         58.50% |
 
-The best overall model was the Support Vector Machine using 40 MFCC features, achieving an accuracy of 67.00%. Random Forest performed very similarly, reaching 66.00% accuracy with the same number of MFCC features. The MLP Neural Network achieved 64.00%, while Tuned KNN achieved its best result using 20 MFCC features, with an accuracy of 59.00%.
 
-![Best accuracy by model](comparison_tuned_knn_best_accuracy_by_model.png)
 
-The comparison shows that tuning improved the KNN result compared to the original fixed `k=27` version. However, KNN still did not outperform the other models. This is most likely because KNN makes decisions based directly on distances between feature vectors, while SVM with an RBF kernel can learn a nonlinear decision boundary between overlapping genre classes.
+![Model accuracy comparison](comparison_all_models_by_features.png)
+
+The best overall model was the Support Vector Machine using 40 MFCC features, achieving an accuracy of 67.00%. Random Forest performed very similarly, reaching 66.00% accuracy with the same number of MFCC features. The MLP Neural Network achieved 64.00%, while KNN achieved its best result using 60 MFCC features, with an accuracy of 58.00%.
+
+![Best accuracy by model](comparison_best_accuracy_by_model.png)
+
+The comparison shows that KNN is the weakest model. This is most likely because KNN makes decisions based directly on distances between feature vectors, while SVM with an RBF kernel can learn a nonlinear decision boundary between overlapping genre classes.
 
 Since 40 MFCC features gave the best result for SVM, Random Forest, and the Neural Network, we also compared the models directly at this feature size.
 
-![Model comparison using 40 MFCC features](comparison_tuned_knn_40_mfcc_features.png)
+![Model comparison using 40 MFCC features](comparison_40_mfcc_features.png)
 
 The heatmap shows that the strongest model-feature combination was SVM with 40 MFCC features. Increasing the number of MFCC features to 60 did not improve the advanced models. This suggests that the additional MFCC coefficients may contain less useful information or introduce noise into the classification.
 
-![Accuracy heatmap](comparison_tuned_knn_accuracy_heatmap.png)
-
-The final confusion matrix was created for the best overall model, which was SVM with 40 MFCC features.
-
-![Best overall confusion matrix](comparison_tuned_knn_confusion_matrix.png)
+![Accuracy heatmap](comparison_accuracy_heatmap.png)
 
 The SVM model performed especially well on classical, blues, metal, jazz, and pop. The most difficult genres were disco, country, rock, and reggae. These genres were often confused with other genres, which is expected because they can have overlapping timbre and rhythm characteristics when represented only by averaged MFCC features.
 
-Overall, the Support Vector Machine was the best model for this MFCC-based music genre classification task. Random Forest was very close, while the MLP Neural Network and Tuned KNN performed slightly worse. Based on these results, SVM is the most suitable classifier among the tested models for the current feature representation.
+Overall, the best performing model was the Support Vector Machine, which achieved the highest accuracy of 67.00% using 40 MFCC features. Random Forest was very close with 66.00%, showing that it is also suitable for this classification task. The MLP Neural Network performed slightly worse with 64.00%, probably because the input data only contained averaged MFCC features instead of richer time-frequency information such as spectrograms. The KNN model only reached 58.00% accuracy, making it the weakest of the tested models. This suggests that for the current MFCC-based feature representation, SVM is the most effective classifier because its RBF kernel can handle nonlinear separation between overlapping music genres better than distance-based KNN.
+
+## Future Improvements
+
+There are several ways the project could be improved in the future. First, more audio features could be added besides MFCCs, such as chroma features, spectral contrast, zero-crossing rate, tempo, and rhythm-based features. These could help distinguish genres that have similar timbre but different rhythmic structure. Second, instead of averaging the MFCCs over the whole song, frame-level features could be used so that the model keeps more information about how the music changes over time. Third, a CNN could be implemented using spectrogram or mel-spectrogram images, which may perform better than the MLP model because it can learn patterns in the time-frequency domain. Finally, more hyperparameter tuning could be applied to all models, especially SVM and Random Forest, to check whether their accuracy can be improved further.
+
